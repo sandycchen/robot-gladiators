@@ -33,54 +33,59 @@ var fightOrSkip = function() {
     return false;
 }
 
-
 var fight = function(enemy) {
+    var isPlayerTurn = true;
+    if (Math.random() > 0.5) {
+        isPlayerTurn = false;
+    }
+
     while (playerInfo.health > 0 && enemy.health > 0) {
-        if (fightOrSkip()) {
-            break;
-        }
+        if (isPlayerTurn) {
+            if (fightOrSkip()) {
+                break;
+            }
+            // Subtract the value of 'playerInfo.attack' from the value of 'enemy.health' and use that result to update the value in the 'enemy.health' variable
+            var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
 
-        // Subtract the value of 'playerInfo.attack' from the value of 'enemy.health' and use that result to update the value in the 'enemy.health' variable
-        var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+            enemy.health = Math.max(0, enemy.health - damage);
 
-        enemy.health = Math.max(0, enemy.health - damage);
+            // Log a resulting message to the console so we know that it worked. 
+            console.log(
+                playerInfo.name + " attacked " + enemy.name + ". " + enemy.name + " now has " + enemy.health + " health remaining."
+            );
+                
+            // check enemy's health
+            if (enemy.health <= 0) {
+                window.alert(enemy.name + " has died!");
 
-        // Log a resulting message to the console so we know that it worked. 
-        console.log(
-            playerInfo.name + " attacked " + enemy.name + ". " + enemy.name + " now has " + enemy.health + " health remaining."
-        );
+                playerInfo.money = playerInfo.money + 20;
+
+                break;
+            } else {
+                window.alert(enemy.name + " still has " + enemy.health + " health left.");
+            }
+        } else {
+            // Subtract the value of 'enemy.attack' from the value of 'playerInfo.health' and use that result to update the value in the 'playerInfo.health' variable.
+            var damage = randomNumber(enemy.attack - 3, enemy.attack);
             
-        // check enemy's health
-        if (enemy.health <= 0) {
-            window.alert(enemy.name + " has died!");
+            playerInfo.health = Math.max(0, playerInfo.health - damage);
 
-            playerInfo.money = playerInfo.money + 20;
+            // Log a resulting message to the console so we know that it worked.
+            console.log(
+                enemy.name + " attacked " + playerInfo.name + ". " + playerInfo.name + " now has " + playerInfo.health + " health remaining. "
+            );
 
-            break;
-        } else {
-            window.alert(enemy.name + " still has " + enemy.health + " health left.");
+            // check player's health
+            if (playerInfo.health <= 0) {
+                window.alert(playerInfo.name + " has died!");
+                break;
+            } else {
+                window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
+            }
         }
-
-        // Subtract the value of 'enemy.attack' from the value of 'playerInfo.health' and use that result to update the value in the 'playerInfo.health' variable.
-        var damage = randomNumber(enemy.attack - 3, enemy.attack);
-        
-        playerInfo.health = Math.max(0, playerInfo.health - damage);
-
-        // Log a resulting message to the console so we know that it worked.
-        console.log(
-            enemy.name + " attacked " + playerInfo.name + ". " + playerInfo.name + " now has " + playerInfo.health + " health remaining. "
-        );
-
-        // check player's health
-        if (playerInfo.health <= 0) {
-            window.alert(playerInfo.name + " has died!");
-            break;
-        } else {
-            window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
-        }
-
-    };
-}
+        isPlayerTurn = !isPlayerTurn;
+    }
+};
 
 var startGame = function() {
     playerInfo.reset();
