@@ -31,7 +31,7 @@ var fightOrSkip = function() {
         }
     }
     return false;
-}
+};
 
 var fight = function(enemy) {
     var isPlayerTurn = true;
